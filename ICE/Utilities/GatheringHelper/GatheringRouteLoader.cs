@@ -334,6 +334,7 @@ public static class GatheringRouteLoader
             1237 => "Sinus Ardorum",
             1291 => "Phaenna",
             1310 => "Oizys",
+            1319 => "Auxesia",
             _ => $"Zone_{territoryId}" // Fallback for unknown zones
         };
     }

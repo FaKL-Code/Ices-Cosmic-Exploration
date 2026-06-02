@@ -152,6 +152,51 @@ internal static class NpcData // Renamed the class to avoid conflict
                 Location_Npc = new(-155.02f, 0.50f, 144.58f),
             }
         },
+        [1319] = new Dictionary<NpcType, NPCInfo> // Auxesia
+        {
+            [NpcType.Repair] = new NPCInfo // Repair | Gil Gear Vendor
+            {
+                NpcId = 1056825,
+                Name = "Godgyth",
+                Location_Npc = new Vector3(317.68f, 205.75f, 374.78f),
+                Location_Circle = new Vector3(315.45f, 205.75f, 373.84f),
+            },
+            [NpcType.Credit] = new NPCInfo // Credit Exchange Vendor
+            {
+                NpcId = 1056824,
+                Name = "Mesouaidonque",
+                Location_Npc = new Vector3(317.74f, 205.75f, 376.70f),
+                Location_Circle = new Vector3(315.64f, 205.75f, 377.95f),
+            },
+            [NpcType.Relic] = new NPCInfo // Relic NPC
+            {
+                NpcId = 1056821,
+                Name = "Researchingway",
+                Location_Npc = new Vector3(291.00f, 206.21f, 402.58f),
+                Location_Circle = new Vector3(289.97f, 205.75f, 400.65f),
+            },
+            [NpcType.Gamba] = new NPCInfo // Cosmic Fortune aka Gamba Wheel
+            {
+                NpcId = 1056826,
+                Name = "Orbitingway",
+                Location_Npc = new Vector3(290.94f, 206.21f, 349.36f),
+                Location_Circle = new Vector3(290.88f, 205.75f, 351.38f),
+            },
+            [NpcType.Drone] = new NPCInfo
+            {
+                NpcId = 1056828,
+                Name = "Kaede",
+                Location_Npc = new Vector3(302.20f, 205.64f, 398.55f),
+                Location_Circle = new Vector3(302.88f, 205.64f, 397.17f),
+            },
+            [NpcType.RedAlert] = new NPCInfo()
+            {
+                NpcId = 1056819,
+                Name = "Lefleda",
+                Location_Npc = new Vector3(280.41f, 205.64f, 352.50f),
+                Location_Circle = new Vector3(279.25f, 205.64f, 353.22f),
+            }
+        },
     };
 
     public static Vector3 GetRandomPointInCircle(Vector3 center, float radius)

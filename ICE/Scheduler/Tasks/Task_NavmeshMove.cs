@@ -501,6 +501,33 @@ namespace ICE.Scheduler.Tasks
                     LandZone = new(-123.94f, -193.70f, -802.01f),
                     RequiredLogLv = 14,
                 }
+            },
+            [1319] = new() // Auxesia
+            {
+                // NOTE: MapSelector = index in the in-game teleport (TelepotTown) list.
+                // Assigned 0/1/2 in capture order (first = hub aetheryte). Verify against the
+                // in-game list if aethernet teleports go to the wrong shard.
+                new()
+                {
+                    MapSelector = 0,
+                    AethernetId = 2015422,
+                    Location = new(259.80f, 205.64f, 356.30f),
+                    LandZone = new(260.00f, 205.64f, 357.89f),
+                },
+                new()
+                {
+                    MapSelector = 1,
+                    AethernetId = 2015424,
+                    Location = new(-242.73f, 168.05f, 321.17f),
+                    LandZone = new(-243.65f, 168.05f, 320.88f),
+                },
+                new()
+                {
+                    MapSelector = 2,
+                    AethernetId = 2015423,
+                    Location = new(-226.37f, 145.01f, -560.40f),
+                    LandZone = new(-226.45f, 145.01f, -559.09f),
+                }
             }
         };
         private static Task? _PathCalculations = null;
@@ -562,13 +589,18 @@ namespace ICE.Scheduler.Tasks
             [1237] = 15,
             [1291] = 15,
             [1310] = 17,
+            [1319] = 0, // Auxesia | 0 = read the real progress in-game via WKSHistoryBoard
         };
 
         private static bool? CalculateAethernet(Vector3 destination)
         {
             string tag = "Navmesh: Aethernet Calculation";
             var territoryId = Player.Territory.RowId;
-            var planetProgress = PlanetProgress[territoryId];
+            if (!PlanetProgress.TryGetValue(territoryId, out var planetProgress))
+            {
+                IceLogging.Error($"No PlanetProgress entry for territory {territoryId} (new planet not added?), skipping aethernet calc", tag);
+                return true;
+            }
 
             if (planetProgress == 0)
             {
@@ -895,7 +927,11 @@ namespace ICE.Scheduler.Tasks
         {
             string tag = "[Navmesh: Calculate Hub -> Aethernet]";
             var territoryId = Player.Territory.RowId;
-            var planetProgress = PlanetProgress[territoryId];
+            if (!PlanetProgress.TryGetValue(territoryId, out var planetProgress))
+            {
+                IceLogging.Error($"No PlanetProgress entry for territory {territoryId} (new planet not added?), skipping hub aethernet calc", tag);
+                return true;
+            }
 
             if (CosmicHelper.HubCenter.TryGetValue(Player.Territory.RowId, out var HubCenter))
             {

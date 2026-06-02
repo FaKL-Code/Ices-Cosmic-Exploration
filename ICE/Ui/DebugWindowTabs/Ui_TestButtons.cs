@@ -330,6 +330,88 @@ namespace ICE.Ui.DebugWindowTabs
                 }
             }
 
+            // --- New planet helper: capture coords for MoonNpcs / PlanetAethernet / HubCenter ---
+            ImGui.Separator();
+            {
+                var territoryId = Player.Territory.RowId;
+                var playerPos = Player.Position;
+                var target = PlayerHelper.LocalPlayer?.TargetObject;
+
+                ImGui.Text($"Territory (planet id): {territoryId}");
+                ImGui.Text($"Player pos: {playerPos.X:F2}f, {playerPos.Y:F2}f, {playerPos.Z:F2}f");
+                if (target is not null)
+                    ImGui.Text($"Target: {target.Name} | BaseId: {target.BaseId} | pos: {target.Position.X:F2}f, {target.Position.Y:F2}f, {target.Position.Z:F2}f");
+                else
+                    ImGui.Text("Target: (none)");
+
+                if (ImGui.Button("Copy NPC entry (target = NPC, stand where you interact)"))
+                {
+                    if (target is not null)
+                    {
+                        var t = target.Position;
+                        string npc = $"// {target.Name} @ territory {territoryId}\n" +
+                            $"[NpcType./*?*/] = new NPCInfo\n{{\n" +
+                            $"    NpcId = {target.BaseId},\n" +
+                            $"    Name = \"{target.Name}\",\n" +
+                            $"    Location_Npc = new Vector3({t.X:F2}f, {t.Y:F2}f, {t.Z:F2}f),\n" +
+                            $"    Location_Circle = new Vector3({playerPos.X:F2}f, {playerPos.Y:F2}f, {playerPos.Z:F2}f),\n}},";
+                        ImGui.SetClipboardText(npc);
+                        Svc.Chat.Print(npc);
+                    }
+                    else Svc.Chat.Print("No target selected.");
+                }
+
+                if (ImGui.Button("Copy Aethernet entry (target = aethershard, stand at land spot)"))
+                {
+                    if (target is not null)
+                    {
+                        var t = target.Position;
+                        string aether = $"// aethershard @ territory {territoryId}\n" +
+                            $"new() {{ MapSelector = /*?*/, AethernetId = {target.BaseId}, " +
+                            $"Location = new({t.X:F2}f, {t.Y:F2}f, {t.Z:F2}f), " +
+                            $"LandZone = new({playerPos.X:F2}f, {playerPos.Y:F2}f, {playerPos.Z:F2}f) }},";
+                        ImGui.SetClipboardText(aether);
+                        Svc.Chat.Print(aether);
+                    }
+                    else Svc.Chat.Print("No target selected.");
+                }
+
+                if (ImGui.Button("Copy HubCenter (uses your current position)"))
+                {
+                    string hub = $"[{territoryId}] = new({playerPos.X:F2}f, {playerPos.Y:F2}f, {playerPos.Z:F2}f),";
+                    ImGui.SetClipboardText(hub);
+                    Svc.Chat.Print(hub);
+                }
+
+                if (ImGui.Button("Dump current-territory missions (for QuickLevelList/Unlock lists)"))
+                {
+                    string JobName(uint j) => j switch
+                    {
+                        8 => "CRP", 9 => "BSM", 10 => "ARM", 11 => "GSM", 12 => "LTW",
+                        13 => "WVR", 14 => "ALC", 15 => "CUL", 16 => "MIN", 17 => "BTN", 18 => "FSH",
+                        _ => $"Job{j}"
+                    };
+
+                    var sb = new StringBuilder();
+                    sb.AppendLine($"// Missions for territory {territoryId}");
+                    var missions = CosmicHelper.SheetMissionDict
+                        .Where(x => x.Value.TerritoryId == territoryId)
+                        .OrderBy(x => x.Value.Jobs.Count > 0 ? x.Value.Jobs[0] : 999)
+                        .ThenBy(x => x.Value.Level)
+                        .ThenBy(x => x.Key);
+
+                    foreach (var m in missions)
+                    {
+                        string jobs = m.Value.Jobs.Count > 0 ? string.Join("/", m.Value.Jobs.Select(JobName)) : "?";
+                        sb.AppendLine($"{m.Key}, // {jobs} Lv.{m.Value.Level} Rank{m.Value.Rank} - {m.Value.Name}");
+                    }
+
+                    var dump = sb.ToString();
+                    ImGui.SetClipboardText(dump);
+                    Svc.Chat.Print($"Dumped {missions.Count()} missions for territory {territoryId} to clipboard.");
+                }
+            }
+
             if (ImGui.Button("Switch class to CRP"))
             {
                 GearsetHandler.TaskClassChange(Job.CRP);

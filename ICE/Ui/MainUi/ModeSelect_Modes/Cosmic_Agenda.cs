@@ -594,7 +594,7 @@ namespace ICE.Ui.MainUi.ModeSelect_Modes
                                 .Where(x => x.Value.Rank < 6)
                                 .Count();
 
-                            var AuxesiaStandard = CosmicHelper.SheetMissionDict.Where(x => x.Value.TerritoryId == 1317)
+                            var AuxesiaStandard = CosmicHelper.SheetMissionDict.Where(x => x.Value.TerritoryId == 1319)
                                 .Where(x => C.MissionConfig.ContainsKey(x.Key))
                                 .Where(x => C.MissionConfig[x.Key].Enabled)
                                 .Where(x => x.Value.Jobs.Contains(agendaInfo.SelectedJob))

@@ -144,6 +144,7 @@ public static unsafe partial class CosmicHelper
     {
         [1237] = new(2.84f, 1.55f, -0.06f),
         [1291] = new(339.90f, 52.60f, -412.10f),
-        [1310] = new(-180.02f, 0.50f, 129.25f)
+        [1310] = new(-180.02f, 0.50f, 129.25f),
+        [1319] = new(294.68f, 205.59f, 376.10f) // Auxesia
     };
 }

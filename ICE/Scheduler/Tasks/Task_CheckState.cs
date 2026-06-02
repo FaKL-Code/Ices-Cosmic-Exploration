@@ -369,8 +369,7 @@ namespace ICE.Scheduler.Tasks
             }
 
             int dronebitAmount = 5000;
-            // TODO: Add Auxesia Support
-            if (PlayerHelper.IsInOizys())
+            if (PlayerHelper.IsInOizys() || PlayerHelper.IsInAuxesia())
             {
                 var dronebitId = CosmicHelper.DronebitInfo[territory].creditId;
                 PlayerHelper.GetItemCount(dronebitId, out dronebitAmount);
